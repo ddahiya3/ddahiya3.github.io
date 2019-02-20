@@ -18,9 +18,6 @@
           "name":"coin",
           "damage":100
         }
-      ],
-      "monstersInRoom":[
-        "Cookie Monster"
       ]
     },
     {
@@ -39,35 +36,13 @@
           "name":"bazooka",
           "damage":300
         }
-      ],
-      "monstersInRoom":[
-        "Loch Ness Monster"
       ]
     }
   ],
   "player":
   {
-    "name":"Dipro Ray",
     "items":[
 
-    ],
-    "attack":350,
-    "defense":450,
-    "health":1000,
-    "level":1
-  },
-  "monsters":[
-    {
-      "name":"Cookie Monster",
-      "attack":250,
-      "defense":150,
-      "health":750
-    },
-    {
-      "name":"Loch Ness Monster",
-      "attack":200,
-      "defense":450,
-      "health":750
-    }
-  ]
+    ]
+  }
 }
