@@ -1,1 +1,434 @@
-<b> allo how is this </b>
+<!DOCTYPE html>
+
+
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<body onload="updatepage1()">
+<p id=idk> </p>
+<p id=idk2></p>
+<p id=idk3></p>
+<p id=idk4></p>
+<p id=idk5></p>
+<select id="selectButton"></select>
+<div id='try'></div>
+<button id="page1" onclick = "updatepage1()">Page 1</button>
+<button id="page2" onclick = "updatepage2()">Page 2</button>
+<button id="page3" onclick = "updatepage3()">Page 3</button>
+
+</body>
+<script>
+
+    
+    
+    function updatepage3() {
+        d3.select("body").select("#idk").text("");
+        d3.select("body").select("#idk2").text("");
+        d3.select("body").select("#idk3").text("");
+        d3.select("body").select("#idk4").text("");
+        d3.select("body").select("#idk5").text("");
+        d3.select('svg').remove();  // bEGIN FROM HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //d3.select("#selectButton").remove();
+        d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/winter_medals_final.csv").then(function(winter_data) {
+
+            xscale = d3.scaleBand().domain(["Bronze",'Silver','Gold']).range([0,400]).padding(0.2);
+            yscale = d3.scaleLinear().domain([0,50]).range([400,0]);
+
+            const winter_regions = ['Australia', 'Austria', 'Belarus', 'Bulgaria', 'Canada', 'China',
+                'Croatia', 'Czech Republic', 'Estonia', 'Finland', 'France',
+                'Germany', 'Italy', 'Japan', 'Kazakhstan', 'Latvia', 'Netherlands',
+                'Norway', 'Poland', 'Russia', 'Slovakia', 'Slovenia',
+                'South Korea', 'Sweden', 'Switzerland', 'UK', 'USA', 'Ukraine']
+
+
+            d3.select("#selectButton")
+            .selectAll('option').remove();
+
+            d3.select("#selectButton")
+            .selectAll('myOptions')
+            .data(winter_regions)
+            .enter()
+            .append('option')
+            .text(d => d) // text showed in the menu
+            .attr("value", d => d)
+            //.exit().remove() // corresponding value returned by the button
+
+            function update_winter(selected_region) {
+                new_data = winter_data.filter(function(d) { return d.region == selected_region; })
+                svg.selectAll("rect").data(new_data).transition().duration(1000)
+                    .attr("x", function(d,i)    {return xscale(d.Medal);})
+                    .attr("y", function(d, i)    {return yscale(d.Total);})
+                    .attr("width", xscale.bandwidth())
+                    .attr("height", function(d, i)  {return 400 - yscale(d.Total);})
+                    .attr("fill", function(d,i) { if (d.Medal == "Gold") {return "gold";}
+                                        else if (d.Medal == "Silver") {return "blue";}
+                                        else if (d.Medal == "Bronze") {return "brown";}})
+            }
+
+            d3.select("#selectButton").on("change", function(event, d) {
+            // recover the option that has been chosen
+                let selected_region = d3.select(this).property("value")
+            // run the updateChart function with this selected option
+                update_winter(selected_region)
+        })
+
+            const svg = d3.select("#try")
+                .append("svg")
+                    .attr("width", 700)
+                    .attr("height", 500)
+                .append("g")
+                    .attr("transform",
+                    'translate(50, 50)');
+
+            const tooltip = d3.select("#try")
+                .append("div")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("position", "absolute") //important to get to display next to cursor
+                .style("background-color", "white")
+                .style("border", "solid")
+                .style("border-width", "1px")
+                .style("border-radius", "5px")
+                .style("padding", "10px");
+
+            const mouseover = function(event, d) {
+                tooltip.style("opacity", 1)
+                .html("Total Won : " + d.Total)
+                .style("left", (event.pageX) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+                .style("top", (event.pageY) + "px")
+            }
+
+            const mousemove = function(event, d) {
+                tooltip.html("Total Won : " + d.Total)
+                .style("left", (event.pageX) + 90 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+                .style("top", (event.pageY) + "px")
+                
+            }
+
+            // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+            const mouseleave = function(event, d) {
+                tooltip
+                .transition()
+                .duration(2)
+                .style("opacity", 0)
+            }
+
+            svg.append('g').attr("transform","translate(0,0)").call(d3.axisLeft(yscale));
+            svg.append('g').attr("transform","translate(0,400)").call(d3.axisBottom(xscale));
+
+            svg.selectAll("mybar")
+                .data(winter_data.filter(function(d) {return d.region == 'Australia';}))
+                .join("rect")
+                    .attr("x", function(d,i)    {return xscale(d.Medal);})
+                    .attr("y", function(d, i)    {return yscale(d.Total);})
+                    .attr("width", xscale.bandwidth())
+                    .attr("height", function(d, i)  {return 400 - yscale(d.Total);})
+                    .attr("fill", function(d,i) { if (d.Medal == "Gold") {return "gold";}
+                                        else if (d.Medal == "Silver") {return "blue";}
+                                        else if (d.Medal == "Bronze") {return "brown";}})
+                .on("mouseover", mouseover )
+                .on("mousemove", mousemove )
+                .on("mouseleave", mouseleave );
+            
+        })
+        
+    }
+
+    function updatepage2() {
+        d3.select("body").select("#idk").text("");
+        d3.select("body").select("#idk2").text("");
+        d3.select("body").select("#idk3").text("");
+        d3.select("body").select("#idk4").text("");
+        d3.select("body").select("#idk5").text("");
+        d3.select('svg').remove();  // bEGIN FROM HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //d3.select("#selectButton").remove();
+        d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/summer_medals_final.csv").then(function(winter_data) {
+
+            xscale = d3.scaleBand().domain(["Bronze",'Silver','Gold']).range([0,400]).padding(0.2);
+            yscale = d3.scaleLinear().domain([0,200]).range([400,0]);
+
+            const winter_regions = ['Australia', 'Austria', 'Belarus', 'Bulgaria', 'Canada', 'China',
+                'Croatia', 'Czech Republic', 'Estonia', 'Finland', 'France',
+                'Germany', 'Italy', 'Japan', 'Kazakhstan', 'Latvia', 'Netherlands',
+                'Norway', 'Poland', 'Russia', 'Slovakia', 'Slovenia',
+                'South Korea', 'Sweden', 'Switzerland', 'UK', 'USA', 'Ukraine']
+
+
+            d3.select("#selectButton")
+            .selectAll('option').remove();
+
+            d3.select("#selectButton")
+            .selectAll('myOptions')
+            .data(winter_regions)
+            .enter()
+            .append('option')
+            .text(d => d) // text showed in the menu
+            .attr("value", d => d)
+            //.exit().remove() // corresponding value returned by the button
+
+            function update_winter(selected_region) {
+                new_data = winter_data.filter(function(d) { return d.region == selected_region; })
+                svg.selectAll("rect").data(new_data).transition().duration(1000)
+                    .attr("x", function(d,i)    {return xscale(d.Medal);})
+                    .attr("y", function(d, i)    {return yscale(d.Total);})
+                    .attr("width", xscale.bandwidth())
+                    .attr("height", function(d, i)  {return 400 - yscale(d.Total);})
+                    .attr("fill", function(d,i) { if (d.Medal == "Gold") {return "gold";}
+                                        else if (d.Medal == "Silver") {return "blue";}
+                                        else if (d.Medal == "Bronze") {return "brown";}})
+            }
+
+            d3.select("#selectButton").on("change", function(event, d) {
+            // recover the option that has been chosen
+                let selected_region = d3.select(this).property("value")
+            // run the updateChart function with this selected option
+                update_winter(selected_region)
+        })
+
+            const svg = d3.select("#try")
+                .append("svg")
+                    .attr("width", 700)
+                    .attr("height", 500)
+                .append("g")
+                    .attr("transform",
+                    'translate(50, 50)');
+
+            const tooltip = d3.select("#try")
+                .append("div")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("position", "absolute") //important to get to display next to cursor
+                .style("background-color", "white")
+                .style("border", "solid")
+                .style("border-width", "1px")
+                .style("border-radius", "5px")
+                .style("padding", "10px");
+
+            const mouseover = function(event, d) {
+                tooltip.style("opacity", 1)
+                .html("Total Won : " + d.Total)
+                .style("left", (event.pageX) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+                .style("top", (event.pageY) + "px")
+            }
+
+            const mousemove = function(event, d) {
+                tooltip.html("Total Won : " + d.Total)
+                .style("left", (event.pageX) + 90 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+                .style("top", (event.pageY) + "px")
+                
+            }
+
+            // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+            const mouseleave = function(event, d) {
+                tooltip
+                .transition()
+                .duration(2)
+                .style("opacity", 0)
+            }
+
+            svg.append('g').attr("transform","translate(0,0)").call(d3.axisLeft(yscale));
+            svg.append('g').attr("transform","translate(0,400)").call(d3.axisBottom(xscale));
+
+            svg.selectAll("mybar")
+                .data(winter_data.filter(function(d) {return d.region == 'Australia';}))
+                .join("rect")
+                    .attr("x", function(d,i)    {return xscale(d.Medal);})
+                    .attr("y", function(d, i)    {return yscale(d.Total);})
+                    .attr("width", xscale.bandwidth())
+                    .attr("height", function(d, i)  {return 400 - yscale(d.Total);})
+                    .attr("fill", function(d,i) { if (d.Medal == "Gold") {return "gold";}
+                                        else if (d.Medal == "Silver") {return "blue";}
+                                        else if (d.Medal == "Bronze") {return "brown";}})
+                .on("mouseover", mouseover )
+                .on("mousemove", mousemove )
+                .on("mouseleave", mouseleave );
+            
+        })
+        
+    }
+    
+    function updatepage1() {
+
+        d3.select('svg').remove();
+        d3.select("#selectButton")
+            .selectAll('option').remove();  
+
+        d3.select("body").select('#idk').text("With the current 2020 Tokyo Olympics currently underway, the world watches with bated breath as the best athletes in the world compete against each other for the title of the world's best.");
+        d3.select("body").select('#idk2').text("I'm sure many of us wonder if with enough training we too would be able to compete with the world's best. But sadly genetics and other worldy factors also play a role here.");
+        d3.select("body").select('#idk3').text("Thus I will be examining olympian statistics to explore this topic further.");
+        d3.select("body").select('#idk4').text("First we need to check if we have the ideal body type required for the sport we are trying to compete and what better way to check this then to review the past olympic winners for these sports and their different heights and weights.");
+        d3.select("body").select('#idk5').text("Below lies a graph that does just that by showcasing stats for past olympic medalists from the year 2000 onwards. Feel free to play around and check your favorite sports and mouse over the different medals to see a clearer spread for that certain medal.")
+        const svg = d3.select("#try")
+            .append("svg")
+                .attr("width", 700)
+                .attr("height", 500)
+            .append("g")
+                .attr("transform",
+                'translate(50, 50)');
+
+        svg.append("circle").attr("cx",500).attr("cy",100).attr("r", 7).style("fill", "gold")
+        svg.append("circle").attr("cx",500).attr("cy",120).attr("r", 7).style("fill", "blue")
+        svg.append("circle").attr("cx",500).attr("cy",140).attr("r", 7).style("fill", "brown")
+        svg.append("text").attr("x", 520).attr("y", 100).text("Gold Medal").style("font-size", "15px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", 520).attr("y", 120).text("Silver Medal").style("font-size", "15px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", 520).attr("y", 140).text("Bronze Medal").style("font-size", "15px").attr("alignment-baseline","middle")
+
+        d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/olympic_info.csv").then(function(data_olympics) {
+            
+            
+            //const data = await d3.csv("https://flunky.github.io/cars2017.csv");
+            xscale = d3.scaleLinear().domain([20,220]).range([0,400]);
+            yscale = d3.scaleLinear().domain([120,230]).range([400,0]);
+
+            
+            const all_sports = ['Judo', 'Boxing', 'Wrestling', 'Swimming', 'Speed Skating',
+                'Short Track Speed Skating', 'Softball', 'Hockey', 'Curling',
+                'Triathlon', 'Football', 'Athletics', 'Badminton', 'Fencing',
+                'Rhythmic Gymnastics', 'Volleyball', 'Basketball', 'Baseball',
+                'Snowboarding', 'Shooting', 'Archery', 'Weightlifting',
+                'Figure Skating', 'Diving', 'Modern Pentathlon',
+                'Synchronized Swimming', 'Canoeing', 'Cross Country Skiing',
+                'Handball', 'Ice Hockey', 'Sailing', 'Table Tennis', 'Gymnastics',
+                'Taekwondo', 'Cycling', 'Rowing', 'Freestyle Skiing',
+                'Beach Volleyball', 'Trampolining', 'Alpine Skiing', 'Golf',
+                'Water Polo', 'Biathlon', 'Equestrianism', 'Tennis', 'Ski Jumping',
+                'Nordic Combined', 'Skeleton', 'Luge', 'Bobsleigh', 'Rugby Sevens']
+
+            d3.select("#selectButton")
+                .selectAll('myOptions')
+                .data(all_sports)
+                .enter()
+                .append('option')
+                .text(d => d) // text showed in the menu
+                .attr("value", d => d); // corresponding value returned by the button
+
+            
+
+            function update(selected_sport) {
+                new_data = data_olympics.filter(function(d) { return (d.Sport == selected_sport && d.Medal != ""); })
+                svg.selectAll("circle").data(new_data).transition().duration(100)
+                    .attr("class", function (d) { return "dot " + d.Medal } )
+                    .attr("cx", function (d) { return xscale(parseInt(d.Weight)); } )
+                    .attr("cy", function (d) { return yscale(parseInt(d.Height)); } )
+                    .attr("r", 7)
+                    .style("fill", function(d) { if (d.Medal == "Gold") {return "gold";}
+                                            else if (d.Medal == "Silver") {return "blue";}
+                                            else if (d.Medal == "Bronze") {return "brown";}
+                                            else {return "grey";}})
+                    .style("opacity", function(d) { if (d.Medal == "Gold") {return 0.9;}
+                                            else if (d.Medal == "Silver") {return 0.9;}
+                                            else if (d.Medal == "Bronze") {return 0.9;}
+                                            else {return 0.2;}});
+                
+                svg.selectAll("circle").data(new_data).exit().remove(); 
+                svg.append("circle").attr("cx",500).attr("cy",100).attr("r", 7).style("fill", "gold")
+                svg.append("circle").attr("cx",500).attr("cy",120).attr("r", 7).style("fill", "blue")
+                svg.append("circle").attr("cx",500).attr("cy",140).attr("r", 7).style("fill", "brown")
+                svg.append("text").attr("x", 520).attr("y", 100).text("Gold Medal").style("font-size", "15px").attr("alignment-baseline","middle")
+                svg.append("text").attr("x", 520).attr("y", 120).text("Silver Medal").style("font-size", "15px").attr("alignment-baseline","middle")
+                svg.append("text").attr("x", 520).attr("y", 140).text("Bronze Medal").style("font-size", "15px").attr("alignment-baseline","middle") 
+            }
+
+            svg.append('g').attr("transform","translate(0,0)").call(d3.axisLeft(yscale));
+            svg.append('g').attr("transform","translate(0,400)").call(d3.axisBottom(xscale));
+
+            // const tooltip = d3.select("#try")
+            //     .append("div")
+            //     .style("opacity", 0)
+            //     .attr("class", "tooltip")
+            //     .style("position", "absolute") //important to get to display next to cursor
+            //     .style("background-color", "white")
+            //     .style("border", "solid")
+            //     .style("border-width", "1px")
+            //     .style("border-radius", "5px")
+            //     .style("padding", "10px");
+
+            // const mouseover = function(event, d) {
+            //     tooltip.style("opacity", 1)
+            //     .html("Height :" + d.Height + "Country :" + d.Medal)
+            //     .style("left", (event.pageX) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            //     .style("top", (event.pageY) + "px")
+            // }
+
+            // const mousemove = function(event, d) {
+            //     tooltip.html("Height :" + d.Height + "Country :" + d.Medal)
+            //     .style("left", (event.pageX) + 90 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            //     .style("top", (event.pageY) + "px")
+                
+            // }
+
+            // // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+            // const mouseleave = function(event, d) {
+            //     tooltip
+            //     .transition()
+            //     .duration(2)
+            //     .style("opacity", 0)
+            // }
+
+            const highlight = function(event,d){
+
+                selected_specie = d.Medal
+
+                d3.selectAll(".dot")
+                .transition()
+                .duration(200)
+                .style("fill", "lightgrey")
+                .attr("r", 4)
+
+                d3.selectAll("." + selected_specie)
+                .transition()
+                .duration(200)
+                .style("fill", function(d) { if (d.Medal == "Gold") {return "gold";}
+                                            else if (d.Medal == "Silver") {return "blue";}
+                                            else if (d.Medal == "Bronze") {return "brown";}
+                                            else {return "grey";}})
+                .attr("r", 8)
+            }
+
+            // Highlight the specie that is hovered
+            const doNotHighlight = function(event,d){
+                d3.selectAll(".dot")
+                .transition()
+                .duration(200)
+                .style("fill", function(d) { if (d.Medal == "Gold") {return "gold";}
+                                            else if (d.Medal == "Silver") {return "blue";}
+                                            else if (d.Medal == "Bronze") {return "brown";}
+                                            else {return "grey";}})
+                .attr("r", 8 )
+            }
+
+            svg.append('g').selectAll("dot")
+            .data(data_olympics.filter(function(d) { return (d.Sport == "Judo" && d.Medal != ""); }))
+            .enter()
+            .append("circle")
+                .attr("class", function (d) { return "dot " + d.Medal } )
+                .attr("cx", function (d) { return xscale(parseInt(d.Weight)); } )
+                .attr("cy", function (d) { return yscale(parseInt(d.Height)); } )
+                .attr("r", 7)
+                .style("fill", function(d) { if (d.Medal == "Gold") {return "gold";}
+                                            else if (d.Medal == "Silver") {return "blue";}
+                                            else if (d.Medal == "Bronze") {return "brown";}
+                                            else {return "grey";}})
+                .style("opacity", function(d) { if (d.Medal == "Gold") {return 0.7;}
+                                            else if (d.Medal == "Silver") {return 0.7;}
+                                            else if (d.Medal == "Bronze") {return 0.7;}
+                                            else {return 0.2;}})
+            .on("mouseover", highlight )
+            //.on("mousemove", mousemove )
+            .on("mouseleave", doNotHighlight );
+
+
+            d3.select("#selectButton").on("change", function(event, d) {
+            // recover the option that has been chosen
+                let selected_sport = d3.select(this).property("value")
+            // run the updateChart function with this selected option
+                update(selected_sport)
+            })
+        
+
+           
+
+        })
+    }
+    
+</script>
+
+
