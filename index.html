@@ -29,6 +29,8 @@
         d3.select("body").select("#idk4").text("");
         d3.select("body").select("#idk5").text("");
         d3.select("body").select('#idk6').text("");
+        d3.select('labels1').text("");
+        d3.select('labels2').text("");
         d3.select('svg').remove();
         //d3.select("#selectButton").remove();
         d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/winter_medals_final.csv").then(function(winter_data) {
@@ -108,13 +110,13 @@
 
             const mouseover = function(event, d) {
                 tooltip.style("opacity", 1)
-                .html("Total Won : " + d.Total)
+                .html("Total Medals : " + d.Total)
                 .style("left", (event.pageX) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
                 .style("top", (event.pageY) + "px")
             }
 
             const mousemove = function(event, d) {
-                tooltip.html("Total Won : " + d.Total)
+                tooltip.html("Total Medals : " + d.Total)
                 .style("left", (event.pageX) + 90 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
                 .style("top", (event.pageY) + "px")
                 
@@ -157,6 +159,8 @@
         d3.select("body").select("#idk4").text("");
         d3.select("body").select("#idk5").text("");
         d3.select("body").select('#idk6').text("");
+        d3.select('labels1').text("");
+        d3.select('labels2').text("");
         d3.select('svg').remove();  // bEGIN FROM HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //d3.select("#selectButton").remove();
         d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/summer_medals_final.csv").then(function(winter_data) {
@@ -254,13 +258,13 @@
 
             const mouseover = function(event, d) {
                 tooltip.style("opacity", 1)
-                .html("Total Won : " + d.Total)
+                .html("Total Medals : " + d.Total)
                 .style("left", (event.pageX) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
                 .style("top", (event.pageY) + "px")
             }
 
             const mousemove = function(event, d) {
-                tooltip.html("Total Won : " + d.Total)
+                tooltip.html("Total Medals : " + d.Total)
                 .style("left", (event.pageX) + 90 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
                 .style("top", (event.pageY) + "px")
                 
@@ -309,15 +313,15 @@
         d3.select("body").select('#idk4').text("First we need to check if we have the ideal body type required for the sport we are trying to compete and what better way to check this then to review the past olympic winners for these sports and their different heights and weights.");
         d3.select("body").select('#idk5').text("Below lies a graph that does just that by showcasing stats for past olympic medalists from the year 2000 onwards."); 
         d3.select("body").select('#idk6').text("IMPORTANT : Feel free to play around and check your favorite sports and hover over the dots to see a clearer spread for that certain medal.");
-
+        
 
         const svg = d3.select("#try")
             .append("svg")
-                .attr("width", 700)
-                .attr("height", 500)
+                .attr("width", 800)
+                .attr("height", 600)
             .append("g")
                 .attr("transform",
-                'translate(50, 50)');
+                'translate(100, 100)');
 
         svg.append("circle").attr("cx",500).attr("cy",100).attr("r", 7).style("fill", "gold")
         svg.append("circle").attr("cx",500).attr("cy",120).attr("r", 7).style("fill", "blue")
@@ -325,6 +329,8 @@
         svg.append("text").attr("x", 520).attr("y", 100).text("Gold Medal").style("font-size", "15px").attr("alignment-baseline","middle")
         svg.append("text").attr("x", 520).attr("y", 120).text("Silver Medal").style("font-size", "15px").attr("alignment-baseline","middle")
         svg.append("text").attr("x", 520).attr("y", 140).text("Bronze Medal").style("font-size", "15px").attr("alignment-baseline","middle")
+        svg.append('text').attr('id', 'labels1').attr('x', 220).attr('y', 450).text("Weight (kg)---->") //herere
+        svg.append('text').attr('id', 'labels2').attr('x', -90).attr('y', 200).text("Height (cm)") //herere
 
         d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/olympic_info.csv").then(function(data_olympics) {
             
@@ -381,6 +387,8 @@
                 svg.append("text").attr("x", 520).attr("y", 100).text("Gold Medal").style("font-size", "15px").attr("alignment-baseline","middle")
                 svg.append("text").attr("x", 520).attr("y", 120).text("Silver Medal").style("font-size", "15px").attr("alignment-baseline","middle")
                 svg.append("text").attr("x", 520).attr("y", 140).text("Bronze Medal").style("font-size", "15px").attr("alignment-baseline","middle") 
+
+
             }
 
             svg.append('g').attr("transform","translate(0,0)").call(d3.axisLeft(yscale));
