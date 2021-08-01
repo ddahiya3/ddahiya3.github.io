@@ -3,11 +3,13 @@
 
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <body onload="updatepage1()">
+<h3 id=umm></h3>
 <p id=idk> </p>
 <p id=idk2></p>
 <p id=idk3></p>
 <p id=idk4></p>
 <p id=idk5></p>
+<p id=idk6></p>
 <select id="selectButton"></select>
 <div id='try'></div>
 <button id="page1" onclick = "updatepage1()">Page 1</button>
@@ -20,12 +22,14 @@
     
     
     function updatepage3() {
-        d3.select("body").select("#idk").text("");
-        d3.select("body").select("#idk2").text("");
-        d3.select("body").select("#idk3").text("");
+        d3.select('body').select('#umm').text('Winter Olympics (Year 2000-Present)');
+        d3.select("body").select("#idk").text("Now to look at some stats for Winter Olympics since the year 2000.");
+        d3.select("body").select("#idk2").text("The individual medal tallies for countries has been given below so you can find the best countries to represent incase you decide to pursue a career in professional sports.");
+        d3.select("body").select("#idk3").text("IMPORTANT : Feel free to try out different coutries and hover over the bars to get an exact number of the medals won for that category.");
         d3.select("body").select("#idk4").text("");
         d3.select("body").select("#idk5").text("");
-        d3.select('svg').remove();  // bEGIN FROM HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        d3.select("body").select('#idk6').text("");
+        d3.select('svg').remove();
         //d3.select("#selectButton").remove();
         d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/winter_medals_final.csv").then(function(winter_data) {
 
@@ -53,6 +57,7 @@
 
             function update_winter(selected_region) {
                 new_data = winter_data.filter(function(d) { return d.region == selected_region; })
+                svg.select('#idi').remove();
                 svg.selectAll("rect").data(new_data).transition().duration(1000)
                     .attr("x", function(d,i)    {return xscale(d.Medal);})
                     .attr("y", function(d, i)    {return yscale(d.Total);})
@@ -61,6 +66,12 @@
                     .attr("fill", function(d,i) { if (d.Medal == "Gold") {return "gold";}
                                         else if (d.Medal == "Silver") {return "blue";}
                                         else if (d.Medal == "Bronze") {return "brown";}})
+                
+                d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/winter_total.csv").then(function(total_summer) {
+                    svg.append('rect').attr("id", 'idi').attr("x", 500).attr('y', 30).attr('width', 400).attr('height', 100).attr("fill", "white").attr('stroke', 'black');
+                    svg.append("text").data(total_summer.filter(function(d) {return d.region == selected_region;}))
+                        .attr("x", 520).attr('y',80).text(function(d) {return d.region + " has won " + d.Total + "% of all medals since 2000.";});
+                })
             }
 
             d3.select("#selectButton").on("change", function(event, d) {
@@ -72,11 +83,17 @@
 
             const svg = d3.select("#try")
                 .append("svg")
-                    .attr("width", 700)
+                    .attr("width", 1100)
                     .attr("height", 500)
                 .append("g")
                     .attr("transform",
                     'translate(50, 50)');
+
+            d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/winter_total.csv").then(function(total_summer) {
+                svg.append('rect').attr("id", 'idi').attr("x", 500).attr('y', 30).attr('width', 400).attr('height', 100).attr("fill", "white").attr('stroke', 'black');
+                svg.append("text").data(total_summer.filter(function(d) {return d.region == "Australia";}))
+                .attr("x", 520).attr('y',80).text(function(d) {return d.region + " has won " + d.Total + "% of all medals since 2000.";});
+            })
 
             const tooltip = d3.select("#try")
                 .append("div")
@@ -133,11 +150,13 @@
     }
 
     function updatepage2() {
-        d3.select("body").select("#idk").text("");
-        d3.select("body").select("#idk2").text("");
-        d3.select("body").select("#idk3").text("");
+        d3.select('body').select('#umm').text('Summer Olympics (Year 2000-Present)');
+        d3.select("body").select("#idk").text("Now to look at some stats for Summer Olympics since the year 2000.");
+        d3.select("body").select("#idk2").text("The individual medal tallies for countries has been given below so you can find the best countries to represent incase you decide to pursue a career in professional sports.");
+        d3.select("body").select("#idk3").text("IMPORTANT : Feel free to try out different coutries and hover over the bars to get an exact number of the medals won for that category.");
         d3.select("body").select("#idk4").text("");
         d3.select("body").select("#idk5").text("");
+        d3.select("body").select('#idk6').text("");
         d3.select('svg').remove();  // bEGIN FROM HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //d3.select("#selectButton").remove();
         d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/summer_medals_final.csv").then(function(winter_data) {
@@ -145,11 +164,29 @@
             xscale = d3.scaleBand().domain(["Bronze",'Silver','Gold']).range([0,400]).padding(0.2);
             yscale = d3.scaleLinear().domain([0,200]).range([400,0]);
 
-            const winter_regions = ['Australia', 'Austria', 'Belarus', 'Bulgaria', 'Canada', 'China',
-                'Croatia', 'Czech Republic', 'Estonia', 'Finland', 'France',
-                'Germany', 'Italy', 'Japan', 'Kazakhstan', 'Latvia', 'Netherlands',
-                'Norway', 'Poland', 'Russia', 'Slovakia', 'Slovenia',
-                'South Korea', 'Sweden', 'Switzerland', 'UK', 'USA', 'Ukraine']
+
+            const winter_regions = ['Afghanistan', 'Algeria', 'Argentina', 'Armenia', 'Australia',
+                'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Barbados',
+                'Belarus', 'Belgium', 'Botswana', 'Brazil', 'Bulgaria', 'Burundi',
+                'Cameroon', 'Canada', 'Chile', 'China', 'Colombia', 'Costa Rica',
+                'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark',
+                'Dominican Republic', 'Ecuador', 'Egypt', 'Eritrea', 'Estonia',
+                'Ethiopia', 'Fiji', 'Finland', 'France', 'Gabon', 'Georgia',
+                'Germany', 'Greece', 'Grenada', 'Guatemala', 'Hungary', 'Iceland',
+                'India', 'Individual Olympic Athletes', 'Indonesia', 'Iran',
+                'Ireland', 'Israel', 'Italy', 'Ivory Coast', 'Jamaica', 'Japan',
+                'Jordan', 'Kazakhstan', 'Kenya', 'Kosovo', 'Kuwait', 'Kyrgyzstan',
+                'Latvia', 'Lithuania', 'Macedonia', 'Malaysia', 'Mauritius',
+                'Mexico', 'Moldova', 'Mongolia', 'Montenegro', 'Morocco',
+                'Mozambique', 'Netherlands', 'New Zealand', 'Niger', 'Nigeria',
+                'North Korea', 'Norway', 'Panama', 'Paraguay', 'Philippines',
+                'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Romania', 'Russia',
+                'Saudi Arabia', 'Serbia', 'Slovakia', 'Slovenia', 'South Africa',
+                'South Korea', 'Spain', 'Sri Lanka', 'Sudan', 'Sweden',
+                'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Thailand', 'Togo',
+                'Trinidad', 'Tunisia', 'Turkey', 'UK', 'USA', 'Uganda', 'Ukraine',
+                'United Arab Emirates', 'Uruguay', 'Uzbekistan', 'Venezuela',
+                'Vietnam', 'Zimbabwe']
 
 
             d3.select("#selectButton")
@@ -166,6 +203,7 @@
 
             function update_winter(selected_region) {
                 new_data = winter_data.filter(function(d) { return d.region == selected_region; })
+                svg.select('#idi').remove();
                 svg.selectAll("rect").data(new_data).transition().duration(1000)
                     .attr("x", function(d,i)    {return xscale(d.Medal);})
                     .attr("y", function(d, i)    {return yscale(d.Total);})
@@ -174,6 +212,13 @@
                     .attr("fill", function(d,i) { if (d.Medal == "Gold") {return "gold";}
                                         else if (d.Medal == "Silver") {return "blue";}
                                         else if (d.Medal == "Bronze") {return "brown";}})
+
+                d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/summer_total.csv").then(function(total_summer) {
+                    svg.append('rect').attr("id", 'idi').attr("x", 500).attr('y', 30).attr('width', 500).attr('height', 100).attr("fill", "white").attr('stroke', 'black');
+                    svg.append("text").data(total_summer.filter(function(d) {return d.region == selected_region;}))
+                    .attr("x", 520).attr('y',80).text(function(d) {return d.region + " has won " + d.Total + "% of all medals since 2000.";});
+            })
+                
             }
 
             d3.select("#selectButton").on("change", function(event, d) {
@@ -185,11 +230,16 @@
 
             const svg = d3.select("#try")
                 .append("svg")
-                    .attr("width", 700)
+                    .attr("width", 1200)
                     .attr("height", 500)
                 .append("g")
                     .attr("transform",
                     'translate(50, 50)');
+            d3.csv("https://raw.githubusercontent.com/ddahiya3/ddahiya3.github.io/main/summer_total.csv").then(function(total_summer) {
+                svg.append('rect').attr("id", 'idi').attr("x", 500).attr('y', 30).attr('width', 500).attr('height', 100).attr("fill", "white").attr('stroke', 'black');
+                svg.append("text").data(total_summer.filter(function(d) {return d.region == "Afghanistan";}))
+                .attr("x", 520).attr('y',80).text(function(d) {return d.region + " has won " + d.Total + "% of all medals since 2000.";});
+            })
 
             const tooltip = d3.select("#try")
                 .append("div")
@@ -228,7 +278,7 @@
             svg.append('g').attr("transform","translate(0,400)").call(d3.axisBottom(xscale));
 
             svg.selectAll("mybar")
-                .data(winter_data.filter(function(d) {return d.region == 'Australia';}))
+                .data(winter_data.filter(function(d) {return d.region == 'Afghanistan';}))
                 .join("rect")
                     .attr("x", function(d,i)    {return xscale(d.Medal);})
                     .attr("y", function(d, i)    {return yscale(d.Total);})
@@ -251,11 +301,16 @@
         d3.select("#selectButton")
             .selectAll('option').remove();  
 
+        d3.select('body').select('#umm').text('Exploring the Olympics : Can you make it?');
+
         d3.select("body").select('#idk').text("With the current 2020 Tokyo Olympics currently underway, the world watches with bated breath as the best athletes in the world compete against each other for the title of the world's best.");
         d3.select("body").select('#idk2').text("I'm sure many of us wonder if with enough training we too would be able to compete with the world's best. But sadly genetics and other worldy factors also play a role here.");
         d3.select("body").select('#idk3').text("Thus I will be examining olympian statistics to explore this topic further.");
         d3.select("body").select('#idk4').text("First we need to check if we have the ideal body type required for the sport we are trying to compete and what better way to check this then to review the past olympic winners for these sports and their different heights and weights.");
-        d3.select("body").select('#idk5').text("Below lies a graph that does just that by showcasing stats for past olympic medalists from the year 2000 onwards. Feel free to play around and check your favorite sports and mouse over the different medals to see a clearer spread for that certain medal.")
+        d3.select("body").select('#idk5').text("Below lies a graph that does just that by showcasing stats for past olympic medalists from the year 2000 onwards."); 
+        d3.select("body").select('#idk6').text("IMPORTANT : Feel free to play around and check your favorite sports and hover over the dots to see a clearer spread for that certain medal.");
+
+
         const svg = d3.select("#try")
             .append("svg")
                 .attr("width", 700)
@@ -284,11 +339,11 @@
                 'Triathlon', 'Football', 'Athletics', 'Badminton', 'Fencing',
                 'Rhythmic Gymnastics', 'Volleyball', 'Basketball', 'Baseball',
                 'Snowboarding', 'Shooting', 'Archery', 'Weightlifting',
-                'Figure Skating', 'Diving', 'Modern Pentathlon',
+                'Figure Skating', 'Diving',
                 'Synchronized Swimming', 'Canoeing', 'Cross Country Skiing',
                 'Handball', 'Ice Hockey', 'Sailing', 'Table Tennis', 'Gymnastics',
                 'Taekwondo', 'Cycling', 'Rowing', 'Freestyle Skiing',
-                'Beach Volleyball', 'Trampolining', 'Alpine Skiing', 'Golf',
+                'Beach Volleyball', 'Trampolining', 'Alpine Skiing',
                 'Water Polo', 'Biathlon', 'Equestrianism', 'Tennis', 'Ski Jumping',
                 'Nordic Combined', 'Skeleton', 'Luge', 'Bobsleigh', 'Rugby Sevens']
 
@@ -304,6 +359,7 @@
 
             function update(selected_sport) {
                 new_data = data_olympics.filter(function(d) { return (d.Sport == selected_sport && d.Medal != ""); })
+                svg.selectAll("circle").data(new_data).exit().remove(); 
                 svg.selectAll("circle").data(new_data).transition().duration(100)
                     .attr("class", function (d) { return "dot " + d.Medal } )
                     .attr("cx", function (d) { return xscale(parseInt(d.Weight)); } )
@@ -318,7 +374,7 @@
                                             else if (d.Medal == "Bronze") {return 0.9;}
                                             else {return 0.2;}});
                 
-                svg.selectAll("circle").data(new_data).exit().remove(); 
+                
                 svg.append("circle").attr("cx",500).attr("cy",100).attr("r", 7).style("fill", "gold")
                 svg.append("circle").attr("cx",500).attr("cy",120).attr("r", 7).style("fill", "blue")
                 svg.append("circle").attr("cx",500).attr("cy",140).attr("r", 7).style("fill", "brown")
@@ -430,5 +486,4 @@
     }
     
 </script>
-
 
